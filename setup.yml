@@ -1,0 +1,8 @@
+- name: setup local machine
+  hosts: local
+  connection: local
+  roles:
+    #- angstwad.docker_ubuntu
+  - terminal
+  - style
+  #- applications

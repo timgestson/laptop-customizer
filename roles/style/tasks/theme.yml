@@ -1,0 +1,32 @@
+- name: add arc-theme repo
+  apt_repository:
+    repo: deb http://download.opensuse.org/repositories/home:/Horst3180/xUbuntu_16.04/ /
+    state: present
+    filename: "arc-theme"
+  become: true
+
+- name: add apt key
+  apt_key:
+    url: http://download.opensuse.org/repositories/home:Horst3180/xUbuntu_16.04/Release.key
+    state: present
+  become: true
+
+- name: install arc-theme
+  apt:
+    update_cache: true
+    name: arc-theme
+  become: true
+
+- name: set theme
+  command: gsettings set {{ item }} 'Arc-Dark'
+  with_items:
+  - org.gnome.desktop.wm.preferences theme
+  - org.gnome.desktop.interface gtk-theme
+
+- name: dl background
+  get_url:
+    url: http://wallpapercave.com/wp/Cr69tPt.jpg
+    dest: "{{ ansible_env.HOME }}/Downloads/matterhorn.jpg"
+
+- name: set background
+  command: gsettings set org.gnome.desktop.background picture-uri 'file://{{ ansible_env.HOME }}/Downloads/matterhorn.jpg'

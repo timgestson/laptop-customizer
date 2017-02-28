@@ -1,0 +1,18 @@
+- name: create icon dir
+  file: 
+    path: "{{ ansible_env.HOME }}/.local/share/icons"
+    mode: 0777 
+    state: directory
+
+- name: download icon repo
+  git:
+    repo: https://github.com/fusion809/MacBuntu-Remix
+    dest: "/usr/share/icons/Macbuntu-Remix"
+  become: true
+
+- name: refresh icons
+  command: gtk-update-icon-cache
+  become: true
+
+- name: set icon theme
+  command: gsettings set org.gnome.desktop.interface icon-theme 'Macbuntu-Remix'

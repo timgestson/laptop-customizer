@@ -1,0 +1,35 @@
+- name: install packages
+  apt: pkg={{ item }} state=present
+  become: true
+  with_items:
+  - vim
+  - git
+  - curl
+
+- name: create pathogen dirs
+  file: 
+    path: "{{ item }}"
+    mode: 0777 
+    state: directory
+  with_items:
+  - "{{ ansible_env.HOME }}/.vim/autoload"
+  - "{{ ansible_env.HOME }}/.vim/bundle"
+
+- name: Bootstrap | Vim | Install pathogen - download code
+  command: > 
+    curl -LSso {{ ansible_env.HOME }}/.vim/autoload/pathogen.vim 
+    https://tpo.pe/pathogen.vim
+    creates={{ ansible_env.HOME }}/.vim/autoload/pathogen.vim
+
+- name: install pathogen packages
+  git:
+    repo: "{{ item }}"
+    dest: "{{ ansible_env.HOME }}/.vim/bundle"
+  with_items:
+  - https://github.com/vim-syntastic/syntastic.git
+  - https://github.com/ElmCast/elm-vim
+
+- name: vimrc 
+  copy:
+    src: .vimrc
+    dest: "{{ ansible_env.HOME }}/.vimrc"

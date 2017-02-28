@@ -1,0 +1,13 @@
+- name: set custom keys
+  command: gsettings set org.gnome.desktop.wm.keybindings {{ item }}
+  with_items:
+  - switch-applications "['<Super>Tab', '<Alt>Tab']"
+  - toggle-maximized "['<Super>space']"
+
+- name: keyboard keys
+  copy:
+    src: .Xmodmap
+    dest: "{{ ansible_env.HOME }}/.Xmodmap"
+
+- name: refresh xmodmap
+  command: xmodmap {{ ansible_env.HOME }}/.Xmodmap
